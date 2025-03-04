@@ -50,12 +50,17 @@ logic gate_mdr;
 logic [1:0] pcmux;
 logic [15:0] BUS;
 logic [15:0] mioMUX_OUT;
+logic [15:0] SR2MUX_OUT;
 
 logic [15:0] mar; 
 logic [15:0] mdr;
 logic [15:0] ir;
 logic [15:0] pc;
 logic ben;
+
+// reg_file variables:
+logic [15:0] SR1OUT;
+logic [15:0] SR2OUT;
 
 
 assign mem_addr = mar;
@@ -125,6 +130,13 @@ MUX #(.NUM_IN(2), .NUM_Select(1)) mioMUX(
     .Select(mem_mem_ena),
     
     .OUT(mioMUX_OUT)
+);
+
+MUX #(.NUM_IN(2), .NUM_Select(1)) SR2MUX (
+    .IN({ {{(11){ir[4]}}, ir[4:0]} , SR2OUT}),
+    .Select(), //TODO: from control.sv
+    
+    .OUT(SR2MUX_OUT) // goes to `B` of ALU
 );
 
 
